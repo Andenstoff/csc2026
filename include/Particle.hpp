@@ -1,34 +1,44 @@
-// CSC Latin America 2026 - Particle class implementation
-#include "Particle.hpp"
+// CSC Latin America 2026 - Particle class
+// Header-only declarations. Implementations live in src/Particle.cpp.
+
+#pragma once
+
 #include <cmath>
-#include <limits>
 
 namespace csc2026 {
 
-Particle::Particle(double px, double py, double pz, double mass)
-    : m_px(px), m_py(py), m_pz(pz), m_mass(mass) {}
+class Particle {
+public:
+    // Default: "empty" particle
+    Particle() = default;
 
-double Particle::eta() const {
-    double p_total = p();
-    if (p_total == 0.0) return 0.0;
-    return 0.5 * std::log((p_total + m_pz) / (p_total - m_pz));
-}
+    // 3-momentum components (GeV) and rest mass (GeV)
+    Particle(double px, double py, double pz, double mass);
 
-Particle Particle::operator+(const Particle& other) const {
-    double new_px = m_px + other.m_px;
-    double new_py = m_py + other.m_py;
-    double new_pz = m_pz + other.m_pz;
-    double e1 = energy();
-    double e2 = other.energy();
-    double e_total = e1 + e2;
-    double p_total_sq = new_px * new_px + new_py * new_py + new_pz * new_pz;
-    double new_mass = std::sqrt(std::max(0.0, e_total * e_total - p_total_sq));
-    return Particle(new_px, new_py, new_pz, new_mass);
-}
+    // Accessors
+    double px() const { return m_px; }
+    double py() const { return m_py; }
+    double pz() const { return m_pz; }
+    double mass() const { return m_mass; }
 
-double invariantMass(const Particle& p1, const Particle& p2) {
-    Particle combined = p1 + p2;
-    return combined.mass();
-}
+    // Derived kinematics
+    double pt() const;
+    double p() const;
+    double energy() const;
+    double phi() const;
+    double eta() const;
+
+    // Four-vector addition (E computed from (p,m))
+    Particle operator+(const Particle& other) const;
+
+private:
+    double m_px{0.0};
+    double m_py{0.0};
+    double m_pz{0.0};
+    double m_mass{0.0};
+};
+
+// Invariant mass of two particles (GeV)
+double invariantMass(const Particle& p1, const Particle& p2);
 
 } // namespace csc2026
