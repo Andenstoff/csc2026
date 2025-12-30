@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     clang-tidy \
     gdb \
     valgrind \
-    perf \
+    linux-perf \
     python3 \
     python3-pip \
     git \
@@ -25,4 +25,3 @@ RUN python3 -m pip install --break-system-packages \
 
 # Default working directory
 WORKDIR /work
-
